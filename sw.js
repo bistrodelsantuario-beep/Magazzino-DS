@@ -1,4 +1,4 @@
-const CACHE='magazzino-ds-v11-register';
+const CACHE='magazzino-ds-v12-register-fix';
 const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./config.js','./register-v11.js','./app-v10-1.txt','./app-v10-2.txt','./app-v10-3.txt','./app-v10-4.txt','./app-v10-5.txt','./app-v10-6.txt'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});

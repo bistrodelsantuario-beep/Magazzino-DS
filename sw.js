@@ -1,5 +1,5 @@
-const CACHE='magazzino-ds-v10-comunicazioni';
-const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./config.js','./app-v10-1.txt','./app-v10-2.txt','./app-v10-3.txt','./app-v10-4.txt','./app-v10-5.txt','./app-v10-6.txt'];
+const CACHE='magazzino-ds-v11-register';
+const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./config.js','./register-v11.js','./app-v10-1.txt','./app-v10-2.txt','./app-v10-3.txt','./app-v10-4.txt','./app-v10-5.txt','./app-v10-6.txt'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',event=>{event.respondWith(fetch(event.request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});return response;}).catch(()=>caches.match(event.request).then(cached=>cached||caches.match('./index.html'))));});

@@ -1,5 +1,5 @@
-const CACHE='magazzino-ds-v8-login';
-const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./config.js','./login-v7-1.txt','./login-v7-2.txt','./login-v7-3a.txt','./login-v7-3b.txt','./login-v7-4.txt','./login-v7-5.txt'];
+const CACHE='magazzino-ds-v9-username';
+const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./config.js','./login-v7-1.txt','./login-v7-2.txt','./login-v7-3a.txt','./login-v7-3b.txt','./login-v7-4.txt','./login-v7-5.txt','./username-v8.js'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',event=>{event.respondWith(fetch(event.request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});return response;}).catch(()=>caches.match(event.request).then(cached=>cached||caches.match('./index.html'))));});

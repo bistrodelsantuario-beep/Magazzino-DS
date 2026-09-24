@@ -1,0 +1,11 @@
+{
+  "name": "Magazzino DS",
+  "short_name": "Magazzino DS",
+  "description": "Gestione ordini e magazzino per Bistrò del Santuario e Leon d'Oro Cafè",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#788469",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

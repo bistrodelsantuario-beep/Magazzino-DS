@@ -7,21 +7,26 @@
     const u=normalizeUsername(raw);
     return u ? `magds.${u}@example.com` : '';
   };
+
   window.cloudSignUp=async function(){
     const name=($('cloudName')?.value||'').trim();
-    const username=normalizeUsername($('cloudEmail')?.value||'');
+    const username=normalizeUsername($('cloudUsername')?.value||'');
     const password=$('cloudPassword')?.value||'';
     const err=$('cloudError');
     if(!err) return;
-    err.style.color='var(--danger)'; err.textContent='';
+    err.style.color='var(--danger)';
+    err.textContent='';
     if(!name||!username||!password){err.textContent='Inserisci nome e cognome, nome utente e password.';return;}
     if(username.length<3){err.textContent='Il nome utente deve avere almeno 3 caratteri.';return;}
     if(password.length<8){err.textContent='Usa una password di almeno 8 caratteri.';return;}
     try{
-      const {data,error}=await window.sbClient.functions.invoke('register-user',{body:{name,username,password}});
+      if(typeof sbClient==='undefined' || !sbClient){err.textContent='Connessione al database non disponibile.';return;}
+      const {data,error}=await sbClient.functions.invoke('register-user',{body:{name,username,password}});
       if(error) throw error;
       if(!data?.ok){
         if(data?.error==='username_used') err.textContent='Questo nome utente è già utilizzato.';
+        else if(data?.error==='invalid_username') err.textContent='Nome utente non valido.';
+        else if(data?.error==='invalid_password') err.textContent='Usa una password di almeno 8 caratteri.';
         else err.textContent='Creazione account non riuscita. Riprova.';
         return;
       }
@@ -32,17 +37,21 @@
       err.textContent='Creazione account non riuscita. Riprova.';
     }
   };
+
   window.cloudSignIn=async function(){
-    const loginId=($('cloudEmail')?.value||'').trim();
+    const loginId=($('cloudUsername')?.value||'').trim();
     const password=$('cloudPassword')?.value||'';
     const err=$('cloudError');
     if(!err) return;
-    err.style.color='var(--danger)'; err.textContent='';
+    err.style.color='var(--danger)';
+    err.textContent='';
     if(!loginId||!password){err.textContent='Inserisci nome utente e password.';return;}
+    if(typeof sbClient==='undefined' || !sbClient){err.textContent='Connessione al database non disponibile.';return;}
     const email=usernameToEmail(loginId);
-    const {data,error}=await window.sbClient.auth.signInWithPassword({email,password});
+    const {data,error}=await sbClient.auth.signInWithPassword({email,password});
     if(error){err.textContent='Nome utente o password non corretti.';return;}
-    window.setAuthRequired(false); window.closeCloudLogin();
-    if(data.user) await window.startCloud(data.user);
+    setAuthRequired(false);
+    closeCloudLogin();
+    if(data.user) await startCloud(data.user);
   };
 })();
